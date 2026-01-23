@@ -4017,10 +4017,10 @@ ${gameData.result.gameSpec.rules.map(rule => `- ${rule}`).join('\n')}
      * 서버 시작
      */
     start() {
-        this.server.listen(this.port, () => {
+        this.server.listen(this.port, '0.0.0.0', () => {
             console.log(`🚀 Sensor Game Hub v6.0 서버 시작`);
             console.log(`📍 포트: ${this.port}`);
-            console.log(`🌐 URL: http://localhost:${this.port}`);
+            console.log(`🌐 URL: http://0.0.0.0:${this.port}`);
             console.log(`📱 센서: http://localhost:${this.port}/sensor.html`);
             console.log(`🎮 게임: http://localhost:${this.port}/games/[solo|dual|multi]`);
         });
