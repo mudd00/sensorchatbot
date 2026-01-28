@@ -1799,7 +1799,7 @@ class HtmlGenerator {
                                         <li><strong>테스트 계정:</strong> "🚀 테스트 계정으로 로그인" 버튼을 클릭하면 별도의 입력 없이 즉시 체험할 수 있습니다.</li>
                                     </ul>
                                     <div class="guide-note">
-                                        💡 <strong>Tip:</strong> 테스트 계정(test@test.com)으로 먼저 플랫폼을 체험해보세요!
+                                        💡 <strong>Tip:</strong> 테스트 계정(test1@naver.com)으로 먼저 플랫폼을 체험해보세요!
                                     </div>
                                 </div>
                             </div>
@@ -2187,8 +2187,8 @@ class HtmlGenerator {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            email: 'test@test.com',
-                            password: 'test1234'
+                            email: 'test1@naver.com',
+                            password: '123456'
                         })
                     });
 
@@ -2206,7 +2206,7 @@ class HtmlGenerator {
 
                         // 환영 메시지 (옵션)
                         setTimeout(() => {
-                            alert('테스트 계정으로 로그인되었습니다!\\n\\n이메일: test@test.com\\n\\n이제 모든 기능을 자유롭게 사용해보세요! 🎮');
+                            alert('테스트 계정으로 로그인되었습니다!\\n\\n이메일: test1@naver.com\\n\\n이제 모든 기능을 자유롭게 사용해보세요! 🎮');
                         }, 500);
                     } else {
                         console.error('❌ 테스트 계정 로그인 실패:', data.error);
