@@ -1561,13 +1561,17 @@ class DeveloperRoutes {
             }
         }
 
-        sendBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
+        if (sendBtn) {
+            sendBtn.addEventListener('click', sendMessage);
+        }
+        if (chatInput) {
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
 
         // AI 게임 생성기 (대화형)
         let generatorSessionId = null;
@@ -1841,25 +1845,29 @@ class DeveloperRoutes {
         }
 
         // 입력 시 자동 높이 조절
-        generatorChatInput.addEventListener('input', autoResizeTextarea);
+        if (generatorChatInput) {
+            generatorChatInput.addEventListener('input', autoResizeTextarea);
 
-        // 초기 높이 설정
-        autoResizeTextarea();
+            generatorChatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendGeneratorMessage();
+                    // 메시지 전송 후 높이 초기화
+                    setTimeout(autoResizeTextarea, 0);
+                }
+            });
 
-        generatorSendBtn.addEventListener('click', () => {
-            sendGeneratorMessage();
-            // 메시지 전송 후 높이 초기화
-            setTimeout(autoResizeTextarea, 0);
-        });
+            // 초기 높이 설정
+            autoResizeTextarea();
+        }
 
-        generatorChatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
+        if (generatorSendBtn) {
+            generatorSendBtn.addEventListener('click', () => {
                 sendGeneratorMessage();
                 // 메시지 전송 후 높이 초기화
                 setTimeout(autoResizeTextarea, 0);
-            }
-        });
+            });
+        }
 
         // ✨ Phase 2: 명령 버튼 이벤트 핸들러
         const cmdSummaryBtn = document.getElementById('cmd-summary-btn');
@@ -1956,60 +1964,65 @@ class DeveloperRoutes {
         }
 
         // 최종 게임 생성
-        finalGenerateBtn.addEventListener('click', async () => {
-            if (!generatorSessionId) {
-                alert('세션이 없습니다. 대화를 먼저 시작해주세요.');
-                return;
-            }
+        if (finalGenerateBtn) {
+            finalGenerateBtn.addEventListener('click', async () => {
+                if (!generatorSessionId) {
+                    alert('세션이 없습니다. 대화를 먼저 시작해주세요.');
+                    return;
+                }
 
-            // 생성 모달 표시 및 초기화
-            const generationModal = document.getElementById('generation-modal');
-            generationModal.classList.remove('hidden');
-            finalGenerateBtn.disabled = true;
+                // 생성 모달 표시 및 초기화
+                const generationModal = document.getElementById('generation-modal');
+                if (generationModal) generationModal.classList.remove('hidden');
+                finalGenerateBtn.disabled = true;
 
-            // 진행률 초기화
-            updateProgressUI(1, 0, '게임 생성 시작...');
+                // 진행률 초기화
+                updateProgressUI(1, 0, '게임 생성 시작...');
 
-            try {
-                const token = localStorage.getItem('authToken');
-                const response = await fetch('/developer/api/finalize-game', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
-                    },
-                    body: JSON.stringify({
-                        sessionId: generatorSessionId
-                    })
-                });
+                try {
+                    const token = localStorage.getItem('authToken');
+                    const response = await fetch('/developer/api/finalize-game', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({
+                            sessionId: generatorSessionId
+                        })
+                    });
 
-                const data = await response.json();
+                    const data = await response.json();
 
-                // 완료 후 잠시 대기 (사용자가 100% 확인 가능)
-                setTimeout(() => {
-                    generationModal.classList.add('hidden');
+                    // 완료 후 잠시 대기 (사용자가 100% 확인 가능)
+                    setTimeout(() => {
+                        if (generationModal) generationModal.classList.add('hidden');
 
-                    if (data.success) {
-                        // 결과 모달 표시
-                        showResultModal(data);
-                    } else {
-                        addGeneratorMessage('❌ 게임 생성 실패: ' + data.error, true);
-                    }
-                }, 1000);
+                        if (data.success) {
+                            // 결과 모달 표시
+                            showResultModal(data);
+                        } else {
+                            addGeneratorMessage('❌ 게임 생성 실패: ' + data.error, true);
+                        }
+                    }, 1000);
 
-            } catch (error) {
-                generationModal.classList.add('hidden');
-                addGeneratorMessage('❌ 오류가 발생했습니다.', true);
-            }
+                } catch (error) {
+                    const generationModal = document.getElementById('generation-modal');
+                    if (generationModal) generationModal.classList.add('hidden');
+                    addGeneratorMessage('❌ 오류가 발생했습니다.', true);
+                }
 
-            finalGenerateBtn.disabled = false;
-        });
+                finalGenerateBtn.disabled = false;
+            });
+        }
 
         // 요구사항 수정
-        modifyRequirementsBtn.addEventListener('click', () => {
-            updateGeneratorProgress('mechanics');
-            addGeneratorMessage('요구사항을 수정하려면 수정할 내용을 말씀해주세요.', true);
-        });
+        if (modifyRequirementsBtn) {
+            modifyRequirementsBtn.addEventListener('click', () => {
+                updateGeneratorProgress('mechanics');
+                addGeneratorMessage('요구사항을 수정하려면 수정할 내용을 말씀해주세요.', true);
+            });
+        }
 
         // 게임 데이터 저장 변수
         let currentGameData = null;
