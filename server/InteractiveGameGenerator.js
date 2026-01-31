@@ -3194,7 +3194,7 @@ ${gameCode.substring(0, 8000)}
             };
 
             // 로컬 파일 저장 (옵션)
-            let indexPath, metadataPath, readmePath;
+            let indexPath, metadataPath, readmePath, reportPath;
 
             if (saveToLocal) {
                 // index.html 파일 저장
@@ -3233,7 +3233,7 @@ ${gameCode.substring(0, 8000)}
                 console.log(validationReport);
 
                 // 검증 결과를 파일로 저장
-                const reportPath = path.join(gamePath, 'VALIDATION_REPORT.md');
+                reportPath = path.join(gamePath, 'VALIDATION_REPORT.md');
                 await fs.writeFile(reportPath, validationReport, 'utf8');
                 console.log(`📋 검증 보고서 로컬 저장: ${reportPath}`);
             } else {
