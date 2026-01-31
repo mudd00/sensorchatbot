@@ -45,8 +45,8 @@ class AuthMiddleware {
                 });
             }
 
-            // 제작자 테이블에서 사용자 확인
-            let { data: creator, error: creatorError } = await this.supabase
+            // 제작자 테이블에서 사용자 확인 (Service Role Key로 RLS 우회)
+            let { data: creator, error: creatorError } = await this.supabaseAdmin
                 .from('game_creators')
                 .select('id, name, nickname')
                 .eq('id', user.id)
@@ -111,8 +111,8 @@ class AuthMiddleware {
             if (!error && user) {
                 req.user = user;
 
-                // 제작자 정보도 조회
-                const { data: creator } = await this.supabase
+                // 제작자 정보도 조회 (Service Role Key로 RLS 우회)
+                const { data: creator } = await this.supabaseAdmin
                     .from('game_creators')
                     .select('id, name, nickname')
                     .eq('id', user.id)
@@ -185,7 +185,7 @@ class AuthMiddleware {
             }
 
             // 일반 사용자는 자신이 만든 게임만 접근 가능
-            const { data: game, error } = await this.supabase
+            const { data: game, error } = await this.supabaseAdmin
                 .from('generated_games')
                 .select('creator_id')
                 .eq('game_id', gameId)

@@ -87,8 +87,8 @@ class AuthRoutes {
                 });
             }
 
-            // 닉네임 중복 확인
-            const { data: existingCreator } = await this.supabase
+            // 닉네임 중복 확인 (Service Role Key로 RLS 우회)
+            const { data: existingCreator } = await this.supabaseAdmin
                 .from('game_creators')
                 .select('nickname')
                 .eq('nickname', nickname)
@@ -187,8 +187,8 @@ class AuthRoutes {
                 });
             }
 
-            // 제작자 정보 조회
-            let { data: creator, error: creatorError } = await this.supabase
+            // 제작자 정보 조회 (Service Role Key로 RLS 우회)
+            let { data: creator, error: creatorError } = await this.supabaseAdmin
                 .from('game_creators')
                 .select('name, nickname, games_created')
                 .eq('id', data.user.id)
@@ -283,8 +283,8 @@ class AuthRoutes {
                 });
             }
 
-            // 제작자 정보 조회
-            const { data: creator } = await this.supabase
+            // 제작자 정보 조회 (Service Role Key로 RLS 우회)
+            const { data: creator } = await this.supabaseAdmin
                 .from('game_creators')
                 .select('name, nickname, games_created, last_game_created_at, created_at')
                 .eq('id', req.user.id)
